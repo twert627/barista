@@ -1,2 +1,2 @@
-# Bake
- Make build system generator
+# Barista
+ Personal build system for projects
