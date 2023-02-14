@@ -5,6 +5,7 @@
 #define USAGE    1
 #define VERSION  2
 #define INIT     3
+#define UPGRADE  4
 #define BAD_ARG -1
 
 int parse_args(int argc, char **argv);

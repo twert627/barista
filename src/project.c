@@ -1,3 +1,7 @@
+#include <stdio.h>
+
 #include "project.h"
 
-typedef int make_iso_compilers_happy;
+void project_init() {
+  
+}

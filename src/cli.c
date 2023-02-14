@@ -3,8 +3,10 @@
 
 #include "cli.h"
 #include "utils.h"
+#include "upgrade.h"
 #include "version.h"
 
+/* TODO: string is not ANSI compliant/build TUI for better terminal usage*/
 static const char *usage =
   "----------------------------------------------\n"
   "| barista     <command> [options]            |\n"
@@ -17,8 +19,11 @@ static const char *usage =
   "| Commands:                                  |\n"
   "|                                            |\n"
   "|   -i, --init     Init new project template |\n"
+  "|   -up, --upgrade Upgrade barista to latest-|\n"
+  "|                   version.                 |\n"
   "----------------------------------------------";
 
+/* ghetto hash map */
 t_symstruct lookup_table[] = {
   { "h",           USAGE },
   { "-h",          USAGE },
@@ -31,12 +36,18 @@ t_symstruct lookup_table[] = {
   { "i",            INIT },
   { "-i",           INIT },
   { "init",         INIT },
-  { "--init",       INIT }
+  { "--init",       INIT },
+  { "u",         UPGRADE },
+  { "-u",        UPGRADE },
+  { "up",        UPGRADE },
+  { "--up",      UPGRADE },
+  { "upgrade",   UPGRADE },
+  { "--upgrade", UPGRADE }
 };
 
 void print_version() {
-  if (version && version != NULL) {
-    printf("%s\n", version);
+  if (barista_version && barista_version != NULL) {
+    printf("%s\n", barista_version);
   } else {
     printf("Version string not found! Please report this bug...\n");
   }
@@ -78,6 +89,9 @@ int parse_args(int argc, char **argv) {
         return 0;
       case INIT:
         printf("Init command ran...\n");
+        return 0;
+      case UPGRADE:
+        upgrade();
         return 0;
       default:
         printf("Invalid arguments! Showing usage.\n");

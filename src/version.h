@@ -1,6 +1,6 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-const char *version = "v0.0.1";
+static const char *barista_version = "v0.0.1"; /* can't name variable `version` for curl compliance :< */
 
 #endif

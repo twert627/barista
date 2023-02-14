@@ -12,9 +12,10 @@ typedef struct {
 int key_from_str(char *str);
 
 /* File system util functions */
-int copy_file(const char *from, char *to);
+int copy_file(const char *from, char *to, int binary);
+size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream);
 
-
+/* TODO: make Colors! ISO-standard escape sequence */
 /* Colors! [https://gist.github.com/RabaDabaDoba/145049536f815903c79944599c6f952a] */
 
 /* Regular text */

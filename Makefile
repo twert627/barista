@@ -1,4 +1,4 @@
-TARGET    = bake
+TARGET    = barista
 
 BUILD_DIR := ./build
 SRC_DIRS  := ./src
@@ -38,12 +38,12 @@ endif
 
 SRCS      := $(shell find $(SRC_DIRS) -name '*.c')
 OBJS      := $(SRCS:%=$(BUILD_DIR)/%.o)
-DEPS 	    := $(OBJS:.o=.d)
+DEPS 	  := $(OBJS:.o=.d)
 
 INC_DIRS  := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS)) 
 CPPFLAGS  := $(INC_FLAGS) -MMD -MP -Wall -Wextra -ansi -pedantic-errors -Wno-overlength-strings
-LDFLAGS   := 
+LDFLAGS   := -lcurl
 
 # The final build step.
 $(BUILD_DIR)/$(TARGET): $(OBJS)
