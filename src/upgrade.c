@@ -9,7 +9,7 @@
 #include "version.h"
 
 #define CURRENT_VERSION_URL                                                    \
-  "https://api.github.com/repos/twert627/xbrew/releases/latest"
+  "https://api.github.com/repos/twert627/barista/releases/latest"
 
 const char *fetch_current_version() {
   http_get_response_t *res = http_get(CURRENT_VERSION_URL);
