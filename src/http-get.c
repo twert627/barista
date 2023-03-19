@@ -36,6 +36,7 @@ static size_t http_get_cb(void *contents, size_t size, size_t nmemb, void *userp
   memset(res->data + res->size, 0, realsize);
   memcpy(res->data + res->size, contents, realsize);
   res->size += realsize;
+  
   res->data[res->size] = 0;
 
   return realsize;
@@ -110,7 +111,7 @@ int http_get_file_shared(const char *url, const char *file, CURLSH *share) {
   curl_easy_setopt(req, CURLOPT_FOLLOWLOCATION, 1);
   curl_easy_setopt(req, CURLOPT_WRITEFUNCTION, http_get_file_cb);
   curl_easy_setopt(req, CURLOPT_WRITEDATA, fp);
-  curl_easy_setopt(req, CURLOPT_USERAGENT, "User-Agent: barista"); /* Set user agent header to barista for GitHub support, maybe change if this causes any errors down the road */
+  curl_easy_setopt(req, CURLOPT_USERAGENT, "User-Agent: barista"); /* Set user agent header to barista (project name, doesnt actually matter) for GitHub support */
   res = curl_easy_perform(req);
 
   curl_easy_getinfo(req, CURLINFO_RESPONSE_CODE, &status);

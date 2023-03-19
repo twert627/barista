@@ -1,7 +1,10 @@
 #!/bin/bash
 
+set -e
+
 main() {
     echo "=== barista installer script (by twert) ==="
+    # TODO: Ask before downgrade and print vers (Use barista -v to check version)
     cp ./build/barista /usr/bin
     if [[ -f /usr/bin/barista ]]; then
         echo ""

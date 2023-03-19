@@ -4,9 +4,12 @@
 #include "cli.h"
 #include "utils.h"
 #include "upgrade.h"
+#include "project.h"
 #include "version.h"
 
-/* TODO: string is not ANSI compliant/build TUI for better terminal usage*/
+#define DEBUG
+
+/* TODO: string is not ANSI compliant/build TUI for better terminal usage */
 static const char *usage =
   "----------------------------------------------\n"
   "| barista     <command> [options]            |\n"
@@ -22,28 +25,6 @@ static const char *usage =
   "|   -up, --upgrade Upgrade barista to latest-|\n"
   "|                   version.                 |\n"
   "----------------------------------------------";
-
-/* ghetto hash map */
-t_symstruct lookup_table[] = {
-  { "h",           USAGE },
-  { "-h",          USAGE },
-  { "help",        USAGE },
-  { "--help",      USAGE },
-  { "v",         VERSION },
-  { "-v",        VERSION },
-  { "version",   VERSION },
-  { "--version", VERSION },
-  { "i",            INIT },
-  { "-i",           INIT },
-  { "init",         INIT },
-  { "--init",       INIT },
-  { "u",         UPGRADE },
-  { "-u",        UPGRADE },
-  { "up",        UPGRADE },
-  { "--up",      UPGRADE },
-  { "upgrade",   UPGRADE },
-  { "--upgrade", UPGRADE }
-};
 
 void print_version() {
   if (barista_version && barista_version != NULL) {
@@ -61,50 +42,82 @@ void print_usage() {
   }
 }
 
-int key_from_str(char *key) {
-  long unsigned int i;
-  for (i = 0; i < NKEYS; i++) {
-    t_symstruct *sym = &lookup_table[i];
-    if (strcmp(sym->key, key) == 0)
-      return sym->value;
-  }
-    return BAD_ARG;
+/* TODO: Implement table as argument rawr xp */
+/* TODO: Calculate NKEYS within the func for multiple table support */
+
+#define MAX_KEYS 100
+
+int key_from_str(char *key, t_symstruct *lookup_table, size_t num_tables) {
+  size_t i;
+  size_t nkeys = num_tables * MAX_KEYS;
+  for (i = 0; i < nkeys; i++) {
+      if (strcmp(lookup_table[i].key, key) == 0) {
+          return lookup_table[i].value;
+      }
+   }
+   return BAD_ARG;
 }
+/*
+int key_from_str(char *key, t_symstruct *lookup_tables[], size_t num_tables) {
+  long unsigned int i, j;
+
+  for (i = 0; i < num_tables; i++) {
+    t_symstruct *lookup_table = lookup_tables[i];
+    size_t NKEYS = sizeof(lookup_table) / sizeof(t_symstruct);
+    printf("DEBUG: NUM KEYS: %ld\n", NKEYS);
+    for (j = 0; j < NKEYS; j++) {
+      t_symstruct *sym = &lookup_table[j];
+      printf("DEBUG: ARG SUPPLIED: %s\n", key);
+      if (strcmp(sym->key, key) == 0) {
+        printf("%d\n", sym->value);
+        return sym->value;
+      }
+    }
+  }
+  return BAD_ARG;
+}
+*/
 
 int parse_args(int argc, char **argv) {
+
 #ifdef DEBUG
-  printf("ARG COUNT: %d\n", argc);
+  printf("DEBUG: ARG COUNT: %d\n", argc);
 #endif
-  if (!argv[1]) {
-    printf("Arg count is not greater than or equal to 2!\n");
-    return 0;
-  } else if (argv[1]) {
-    if (argv[1] != NULL) {
-      switch (key_from_str(argv[1])) {
+  if (argv[1])
+  {
+    if (argv[1] == NULL) {
+      if (RED)
+      {
+        printf(RED);
+        printf("%s is NULL! exiting with failure...\n", argv[1]);
+        printf(reset);
+        return 1;
+      } else {
+        printf("%s is NULL! exiting with failure...\n", argv[1]);
+        return 1;
+      }
+    } else {
+      switch (key_from_str(argv[1], lookup_table_cli, num_tables)) {
       case USAGE:
         print_usage();
-        return 0;
+        break;
       case VERSION:
         print_version();
-        return 0;
+        break;
       case INIT:
-        printf("Init command ran...\n");
-        return 0;
+        project_init();
+        break;
       case UPGRADE:
         upgrade();
-        return 0;
+        break;
       default:
-        printf("Invalid arguments! Showing usage.\n");
         print_usage();
-        return 1;
+        failure("Invalid arguments! Showing usage...\n");
+        break;
+      }
     }
-    } else {
-      printf("%s is NULL! exiting with failure...\n", argv[1]);
-      return 1;
-    }
-  } else { /* For some reason, this block is never reached even if !argv[1] */
-    printf("No arguments supplied! exiting...\n");
-    return 1;
+  } else {
+    failure("argv[1] doesn't exist! exiting with failure...\n");
   }
-  printf("Test....\n");
-}
+  return 0;
+} 

@@ -1,9 +1,11 @@
 #!/bin/bash
+ 
+set -e
 
 check_internet() {
     # Credit to <https://stackoverflow.com/questions/17291233/how-can-i-check-internet-access-using-a-bash-script-on-linux>
     echo "Checking for internet..."
-    wget -q --tries=10 --timeout=20 --spider http://github.com
+    wget -q --tries=10 --timeout=20 --spider https://github.com
     if [[ $? -eq 0 ]]; then
         echo "Online"
         echo ""
@@ -24,6 +26,7 @@ install_packages() {
         echo "Checking installed packages..."
         gcc -v
         make -v
+        
         ;;
     debian) 
         echo "Installing required packages to compile barista on Debian..."
